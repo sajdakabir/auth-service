@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { environment } from './loaders/enviroment.loader.js';
+import { environment } from './loaders/environment.loader.js';
 import Joi from "joi";
 import { initRoutes } from './routes/index.js';
 

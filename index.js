@@ -3,6 +3,6 @@ import { environment } from "./src/loaders/enviroment.loader.js";
 
 (async function init() {
   app.listen(environment.PORT, () => {
-    console.log(`Server listening on port ${environment.PORT}`);
+    console.log(`Server listening on port ${environment.PROT}`);
   });
 })();

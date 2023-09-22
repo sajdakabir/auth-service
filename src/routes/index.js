@@ -1,7 +1,7 @@
 const initRoutes = (app) => {
     app.get('/', async (req, res) => {
         res.json({
-            "message": "Welcome to Pet Project Developers Portal"
+            "message": "Welcome to Auth Service Developers Portal"
         })
     })
     app.use('*', (req, res) => {

@@ -1,9 +1,9 @@
 {
-  "name": "@petproject/auth",
+  "name": "@auth",
   "version": "0.0.1",
-  "description": "PetProject Backend",
+  "description": "Auth Service",
   "main": "index.js",
-  "author": "Pet Project",
+  "author": "Sajda",
   "license": "MIT",
   "type": "module",
   "scripts": {

@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import Joi from "joi";
-// import { initRoutes } from "./routers/index.js";
+import { initRoutes } from "./routes/index.js";
 import { environment } from "./loaders/environment.loader.js"
 
 const { ValidationError } = Joi;
@@ -15,7 +15,7 @@ app.use(
     })
 )
 
-// initRoutes(app)
+initRoutes(app)
 app.use((err, req, res, next) => {
     console.log(err)
     if (environment.SHOW_ADMIN) {

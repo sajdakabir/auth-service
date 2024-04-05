@@ -1,6 +1,6 @@
 import Joi from 'joi';
-import { RegisterPayload } from "../payload/auth.payload.js";
-import { createEmailUser } from "../services/user.service.js";
+import { RegisterPayload, LoginPayload } from "../payload/auth.payload.js";
+import { createEmailUser, validateEmailUser } from "../services/user.service.js";
 import { generateJWTTokenPair } from "../utils/jwt.service.js";
 
 const { ValidationError } = Joi;
@@ -34,6 +34,23 @@ const registerEmailUserController = async (req, res, next) => {
        }
 }
 
+const emailLoginController = async (req, res, next) => {
+    try {
+        const payload = await LoginPayload.validateAsync(req.body)
+        const user = await validateEmailUser(payload.email, payload.password);
+        const tokenPair = await generateJWTTokenPair(user)
+        res.status(200).json({
+            statusCode: 200,
+            response: tokenPair
+        })
+    } catch (err) {
+        const error = new Error(err);
+        error.statusCode = err.statusCode || 500;
+        next(err)
+    }
+}
+
 export {
-    registerEmailUserController
+    registerEmailUserController,
+    emailLoginController
 }

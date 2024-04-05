@@ -7,6 +7,12 @@ const RegisterPayload = Joi.object({
     password: Joi.string().required()
 })
 
+const LoginPayload = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().required()
+})
+
 export {
-    RegisterPayload
+    RegisterPayload,
+    LoginPayload
 }

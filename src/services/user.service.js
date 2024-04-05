@@ -1,5 +1,5 @@
 import { User } from "../models/user.model.js";
-import { generateHash } from "../utils/helper.service.js";
+import { generateHash, verifyPasswordHash } from "../utils/helper.service.js";
 
 const getUserByEmail = async (email) => {
     const user = await User.findOne({
@@ -46,7 +46,27 @@ const createEmailUser = async ({
     return user;
 }
 
+const validateEmailUser = async (email, password) => {
+    const user = await User.findOne({
+        'accounts.local.email': email
+    })
+    if (!user) {
+        const error = new Error("Invalid email or password")
+        error.statusCode = 401;
+        throw error
+    }
+    const verifyPassword = await verifyPasswordHash(password, user.accounts.local.password);
+    if (!verifyPassword) {
+        const error = new Error("Invalid email or password")
+        error.statusCode = 401;
+        throw error
+    }
+    return user
+}
+
+
 
 export {
-    createEmailUser
+    createEmailUser,
+    validateEmailUser
 }

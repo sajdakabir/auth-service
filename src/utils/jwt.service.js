@@ -1,4 +1,4 @@
-import jsonwebtoken from "jsonwebtoken";
+import jsonwebtoken from "jsonwebtoken"
 import { environment } from "../loaders/environment.loader.js";
 
 const { verify, sign } = jsonwebtoken;

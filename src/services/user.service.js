@@ -1,5 +1,6 @@
 import { User } from "../models/user.model.js";
-import { generateHash, verifyPasswordHash } from "../utils/helper.service.js";
+import { generateHash, verifyPasswordHash, generateRandomPassword } from "../utils/helper.service.js";
+import generator from "crypto-random-string";
 
 const getUserByEmail = async (email) => {
     const user = await User.findOne({
@@ -65,7 +66,17 @@ const validateEmailUser = async (email, password) => {
 }
 
 const createMagicLoginLink = async (email, redirectUrl) =>{
-    
+    const token = generator({
+        length: 36,
+        type: "url-safe"
+    })
+    let user = await getUserByEmail(email);
+    let isNewUser = false;
+    if (!user) {
+        isNewUser = true;
+        const userName = email.split('@')[0];
+        user = await createEmailUser({ fullName: email, userName, email, password: generateRandomPassword() })
+    }
 
 }
 

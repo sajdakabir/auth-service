@@ -78,6 +78,16 @@ const createMagicLoginLink = async (email, redirectUrl) =>{
         user = await createEmailUser({ fullName: email, userName, email, password: generateRandomPassword() })
     }
 
+    await LoginLink.create({
+        token,
+        type: "login",
+        user: user._id
+    })
+    return { 
+        ok: "ok",
+        token,
+        isNewUser
+     };
 }
 
 export {

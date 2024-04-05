@@ -64,9 +64,13 @@ const validateEmailUser = async (email, password) => {
     return user
 }
 
+const createMagicLoginLink = async (email, redirectUrl) =>{
+    
 
+}
 
 export {
     createEmailUser,
-    validateEmailUser
+    validateEmailUser,
+    createMagicLoginLink
 }

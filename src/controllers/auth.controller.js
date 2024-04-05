@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import { RegisterPayload, LoginPayload } from "../payload/auth.payload.js";
-import { createEmailUser, validateEmailUser } from "../services/user.service.js";
+import { createEmailUser, validateEmailUser, createMagicLoginLink } from "../services/user.service.js";
 import { generateJWTTokenPair } from "../utils/jwt.service.js";
 
 const { ValidationError } = Joi;
@@ -50,7 +50,31 @@ const emailLoginController = async (req, res, next) => {
     }
 }
 
+const magicLoginController = async ( req, res, next) => {
+    try {
+        if (!req.body.email) {
+            const error = new Error("Bad request")
+            error.statusCode = 400
+            throw error
+        }
+        const { ok, isNewUser } = await createMagicLoginLink(req.body.email, req.body.redirectUrl)
+        res.status(200).json({
+            statusCode: 200,
+            response: {
+                ok,
+                isNewUser
+            }
+        })
+        
+    } catch (err) {
+        const error = new Error(err);
+        error.statusCode = err.statusCode || 500;
+        next(err)
+    }
+}
+
 export {
     registerEmailUserController,
-    emailLoginController
+    emailLoginController,
+    magicLoginController
 }

@@ -90,8 +90,44 @@ const createMagicLoginLink = async (email, redirectUrl) =>{
      };
 }
 
+const getUserById = async (id) => {
+    const user = await User.findOne({
+        uuid: id
+    }, {
+        'accounts.local.password': 0,
+        updatedAt: 0,
+        __v: 0
+    })
+    if (!user) {
+        const error = new Error("User does not exist")
+        error.statusCode = 404;
+        throw error
+    }
+    return user;
+}
+
+
+const validateMagicLoginLink = async (token) => {
+    // TODO: Add expiry time
+    const magicLink = await LoginLink.findOne({
+        token,
+        isRevoked: false
+    }).populate({
+        path: "user",
+        select: "fullName uuid"
+    })
+    if (!magicLink) {
+        const error = new Error("Invalid Magic Link")
+        error.statusCode = 404;
+        throw error;
+    }
+    return magicLink;
+}
+
 export {
     createEmailUser,
     validateEmailUser,
-    createMagicLoginLink
+    createMagicLoginLink,
+    getUserById,
+    validateMagicLoginLink
 }

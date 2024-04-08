@@ -2,6 +2,7 @@ import Joi from 'joi';
 import { RegisterPayload, LoginPayload } from "../payload/auth.payload.js";
 import { createEmailUser, validateEmailUser, createMagicLoginLink } from "../services/user.service.js";
 import { generateJWTTokenPair } from "../utils/jwt.service.js";
+import { getUserById, validateMagicLoginLink } from "../services/user.service.js";
 
 const { ValidationError } = Joi;
 
@@ -73,8 +74,30 @@ const magicLoginController = async ( req, res, next) => {
     }
 }
 
+const validateLoginMagicLinkController = async (req, res, next) => {
+    try {
+        const token = await validateMagicLoginLink(req.body.token)
+        const user = await getUserById(token.user?.uuid)
+        const tokenPair = await generateJWTTokenPair(user)
+        res.status(200).json({
+            statusCode: 200,
+            response: tokenPair
+        })
+        await token.updateOne({
+            $set: {
+                isRevoked: true
+            }
+        })
+    } catch (err) {
+        const error = new Error(err);
+        error.statusCode = err.statusCode || 500;
+        next(err)
+    }
+}
+
 export {
     registerEmailUserController,
     emailLoginController,
-    magicLoginController
+    magicLoginController,
+    validateLoginMagicLinkController
 }
